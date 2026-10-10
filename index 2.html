@@ -1,0 +1,1342 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Trust Tax · Trust Banking Interface</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --glass:rgba(255,255,255,.44);
+  --glass-2:rgba(255,255,255,.58);
+  --line:rgba(126,166,214,.26);
+  --line-strong:rgba(126,166,214,.42);
+  --text:#21415d;
+  --muted:#64809c;
+  --navy:#2b6798;
+  --blue:#75a9de;
+  --blue-mid:#a8c9eb;
+  --blue-soft:#e7f2fc;
+  --blue-soft-2:#dcecfb;
+  --warn:#d77c70;
+  --ok:#4f9f80;
+  --shadow:0 22px 72px rgba(81,117,153,.12);
+  --soft:0 10px 28px rgba(63,102,141,.08);
+  --blur:blur(28px);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  font-family:"Inter",ui-sans-serif,-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",Arial,sans-serif;
+  color:var(--text);
+  background:
+    radial-gradient(circle at 12% 12%, rgba(136,186,236,.18), transparent 24%),
+    radial-gradient(circle at 87% 10%, rgba(184,219,246,.22), transparent 26%),
+    radial-gradient(circle at 50% 80%, rgba(255,255,255,.70), transparent 34%),
+    linear-gradient(180deg,#edf5fc,#f8fbff 42%,#eef5fb);
+  overflow-x:hidden;
+}
+a{text-decoration:none;color:inherit}
+button,input,textarea{font:inherit}
+.wrap{width:min(1180px,92vw);margin:0 auto}
+
+@keyframes cloudFloatA{0%{transform:translateX(0) translateY(0)}50%{transform:translateX(12px) translateY(-8px)}100%{transform:translateX(0) translateY(0)}}
+@keyframes cloudFloatB{0%{transform:translateX(0) translateY(0)}50%{transform:translateX(-14px) translateY(6px)}100%{transform:translateX(0) translateY(0)}}
+@keyframes shimmer{0%{transform:translateX(-120%)}100%{transform:translateX(140%)}}
+@keyframes pulseDot{0%,100%{opacity:.55;transform:scale(1)}50%{opacity:1;transform:scale(1.18)}}
+@keyframes floatY{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+@keyframes fadeUp{0%{opacity:0;transform:translateY(10px)}100%{opacity:1;transform:translateY(0)}}
+@keyframes blinkCaret{50%{opacity:0}}
+@keyframes spinScan{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}
+@keyframes progressGlow{0%,100%{opacity:.65}50%{opacity:1}}
+
+.nav{
+  position:sticky;top:0;z-index:60;
+  background:rgba(244,249,253,.55);backdrop-filter:blur(16px);
+  border-bottom:1px solid rgba(141,174,206,.18);
+}
+.nav-inner{height:74px;display:flex;align-items:center;justify-content:space-between}
+.brand{
+  display:flex;align-items:center;gap:12px;
+  font-family:"Sora",sans-serif;font-weight:800;letter-spacing:.08em
+}
+.logo{
+  width:38px;height:38px;border-radius:8px;
+  background:linear-gradient(145deg,rgba(255,255,255,.88),rgba(219,234,248,.72));
+  border:1px solid rgba(138,170,204,.32);
+  display:grid;place-items:center;box-shadow:var(--soft);color:var(--navy)
+}
+.nav-links{display:flex;gap:26px;color:var(--muted);font-size:14px}
+
+.glass{
+  background:linear-gradient(180deg, rgba(255,255,255,.54), rgba(255,255,255,.34));
+  border:1px solid rgba(255,255,255,.42);
+  backdrop-filter:var(--blur);
+  -webkit-backdrop-filter:var(--blur);
+  box-shadow:var(--shadow), inset 0 1px 0 rgba(255,255,255,.48);
+}
+.panel{border-radius:8px}
+
+.hero{padding:52px 0 28px;position:relative}
+.sky-cloud{
+  position:absolute;border-radius:999px;
+  background:linear-gradient(180deg,rgba(255,255,255,.86),rgba(255,255,255,.34));
+  border:1px solid rgba(255,255,255,.56);
+  filter:blur(1px)
+}
+.c1{width:160px;height:50px;left:6vw;top:32px;opacity:.9;animation:cloudFloatA 10s ease-in-out infinite}
+.c2{width:118px;height:38px;right:10vw;top:76px;opacity:.78;animation:cloudFloatB 12s ease-in-out infinite}
+.c3{width:92px;height:28px;right:24vw;top:32px;opacity:.66;animation:cloudFloatA 8s ease-in-out infinite}
+.c4{width:140px;height:44px;left:22vw;top:86px;opacity:.55;animation:cloudFloatB 14s ease-in-out infinite}
+.hero-grid{
+  display:grid;grid-template-columns:1.02fr .98fr;gap:18px;align-items:stretch;position:relative;z-index:2
+}
+.hero-copy{padding:28px}
+.hero-screen{padding:16px}
+.eyebrow{
+  display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;
+  background:rgba(255,255,255,.38);border:1px solid var(--line);
+  color:#6f91b4;font-size:12px;letter-spacing:.12em;text-transform:uppercase
+}
+.eyebrow i{width:8px;height:8px;border-radius:50%;background:var(--ok)}
+h1{
+  margin:12px 0 10px;
+  font-family:"Sora",sans-serif;
+  font-size:clamp(21px,2.75vw,32px);
+  line-height:1.18;letter-spacing:-.03em
+}
+.hero-en{margin-top:10px;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:#7d95af}
+.lead{color:#5f7995;font-size:15px;line-height:1.78;max-width:590px;letter-spacing:.005em}
+.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:20px}
+.btn{
+  border:1px solid rgba(126,163,200,.28);
+  background:rgba(255,255,255,.48);
+  color:var(--text);padding:12px 18px;border-radius:3px;cursor:pointer;
+  box-shadow:var(--soft);transition:.22s ease;font-weight:700
+}
+.btn:hover{transform:translateY(-2px)}
+.btn.primary{
+  background:linear-gradient(145deg,rgba(255,255,255,.94),rgba(215,233,250,.9));
+  color:#1f3550;position:relative;overflow:hidden
+}
+.btn.primary:after{
+  content:"";position:absolute;top:0;bottom:0;width:34%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.55),transparent);
+  animation:shimmer 4.8s linear infinite;
+}
+.micro-grid{margin-top:22px;display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.micro{
+  padding:12px 13px;border-radius:4px;background:rgba(255,255,255,.26);
+  border:1px solid var(--line);min-height:88px
+}
+.micro b{
+  display:block;font-size:12px;margin-bottom:6px;font-family:"Sora",sans-serif;
+  letter-spacing:.08em;text-transform:uppercase;color:#4a78a4
+}
+.micro span{font-size:12px;color:var(--muted);line-height:1.5}
+
+.dashboard{
+  border-radius:8px;overflow:hidden;background:rgba(255,255,255,.24);
+  border:1px solid rgba(255,255,255,.34);position:relative
+}
+.dashboard:before{
+  content:"";position:absolute;top:0;bottom:0;width:35%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.22),transparent);
+  animation:shimmer 6s linear infinite;pointer-events:none
+}
+.dashboard:after{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(180deg,rgba(255,255,255,.10),transparent 35%);
+  pointer-events:none
+}
+.dash-top{padding:14px 16px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}
+.chip{
+  display:inline-flex;padding:7px 10px;border-radius:999px;background:rgba(255,255,255,.36);
+  border:1px solid rgba(255,255,255,.42);font-size:11px;color:#6784a3;letter-spacing:.08em;text-transform:uppercase
+}
+.live-dot{
+  width:7px;height:7px;border-radius:50%;background:#7ec49f;display:inline-block;margin-right:7px;animation:pulseDot 1.8s ease-in-out infinite
+}
+.dash-body{padding:16px}
+.account{
+  padding:18px;border-radius:6px;
+  background:linear-gradient(135deg,rgba(29,91,146,.96),rgba(86,137,189,.92));
+  color:#fff;position:relative;overflow:hidden
+}
+.account:after{content:"";position:absolute;width:160px;height:160px;border-radius:50%;right:-50px;top:-56px;background:rgba(255,255,255,.1)}
+.account small{letter-spacing:.14em;text-transform:uppercase;opacity:.8}
+.balance{font-family:"Sora",sans-serif;font-size:68px;line-height:1;font-weight:800;letter-spacing:-.05em;margin-top:8px}
+.balance-strip{margin-top:14px;display:flex;gap:8px;flex-wrap:wrap}
+.badge{padding:7px 10px;border-radius:999px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.18);font-size:11px;letter-spacing:.06em}
+.summary-grid{margin-top:12px;display:grid;grid-template-columns:1.05fr .95fr;gap:12px}
+.block{padding:14px;border-radius:4px;background:rgba(255,255,255,.55);border:1px solid var(--line)}
+.metric-line{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px dashed rgba(147,181,214,.28)}
+.metric-line:last-child{border-bottom:none}
+.metric-line b{font-size:13px}
+.metric-line span{font-family:"Sora",sans-serif;font-size:20px;font-weight:700}
+.note{margin-top:10px;padding:12px;border-radius:4px;background:rgba(255,255,255,.52);border:1px solid var(--line);font-size:13px;line-height:1.6;color:#59748f}
+
+.section{padding:36px 0}
+.section-head{display:flex;align-items:end;justify-content:space-between;gap:18px;margin-bottom:16px}
+.section-title{font-family:"Sora",sans-serif;font-size:29px;line-height:1.22;letter-spacing:-.03em;margin:11px 0 0}
+.section-copy{max-width:420px;color:var(--muted);font-size:13px;line-height:1.78;letter-spacing:.01em}
+.tag{
+  display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;
+  background:rgba(255,255,255,.38);border:1px solid var(--line);font-size:11px;letter-spacing:.14em;
+  text-transform:uppercase;color:#7090af
+}
+.tag i{width:8px;height:8px;border-radius:50%;background:var(--blue)}
+.case-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.case{border-radius:6px;overflow:hidden;cursor:pointer;transition:.22s ease}
+.case:hover{transform:translateY(-3px)}
+.scene{
+  height:140px;position:relative;overflow:hidden;
+  background:linear-gradient(180deg,rgba(230,241,252,.78),rgba(250,252,255,.62));
+  border-bottom:1px solid var(--line)
+}
+.scene:before{content:"";position:absolute;left:0;right:0;top:0;height:46px;background:linear-gradient(180deg,rgba(255,255,255,.34),transparent)}
+.scene.serum:after,.scene.brunch:after,.scene.headphones:after{
+  content:attr(data-label);position:absolute;left:16px;bottom:14px;
+  font-family:"Sora",sans-serif;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#8abef0
+}
+.case-icon{
+  position:absolute;right:14px;top:12px;width:42px;height:42px;display:grid;place-items:center;
+  background:rgba(255,255,255,.38);border:1px solid rgba(126,166,214,.24);color:#6f9dc9;font-size:18px;border-radius:4px;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.4);
+  animation:floatY 4s ease-in-out infinite
+}
+.scene-decoration{
+  position:absolute;left:16px;bottom:14px;width:86px;height:36px;
+  background:linear-gradient(90deg,rgba(114,167,223,.10),rgba(255,255,255,.04));
+  border:1px solid rgba(126,166,214,.18);border-radius:4px;
+}
+.case-body{padding:15px}
+.case h3{margin:0 0 6px;font-size:20px;font-family:"Sora",sans-serif;font-weight:700}
+.case p{margin:0;color:var(--muted);font-size:13px;line-height:1.72;min-height:76px}
+.case-foot{margin-top:12px;display:flex;justify-content:space-between;align-items:center}
+.case-foot .chip{font-size:10px;padding:6px 9px}
+
+.logic-flow{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:12px;align-items:center;margin-top:14px
+}
+.logic-step{
+  padding:18px 14px;background:rgba(255,255,255,.34);border:1px solid var(--line);border-radius:6px;
+  text-align:center;position:relative
+}
+.logic-step .emoji{font-size:22px;margin-bottom:8px}
+.logic-step b{display:block;font-family:"Sora",sans-serif;font-size:14px}
+.logic-step span{display:block;margin-top:6px;font-size:12px;color:var(--muted)}
+.logic-arrow{
+  position:absolute;right:-18px;top:50%;transform:translateY(-50%);font-size:18px;color:#8fb6dc
+}
+.compare{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:18px}
+.comp{padding:18px;border-radius:6px}
+.comp h4{margin:0 0 8px;font-size:20px;font-family:"Sora",sans-serif;font-weight:700}
+.line{padding:12px 13px;border-radius:4px;margin-top:10px;border:1px solid var(--line);font-size:14px;line-height:1.65}
+.line.bad{background:rgba(255,247,246,.74)}
+.line.good{background:rgba(230,242,255,.74)}
+.thesis{padding:22px;border-radius:6px}
+
+.overlay{
+  position:fixed;inset:0;z-index:90;background:rgba(237,244,251,.66);backdrop-filter:blur(18px);
+  display:none;align-items:center;justify-content:center;padding:18px
+}
+.overlay.show{display:flex}
+.modal{
+  width:min(1120px,96vw);max-height:94vh;overflow:auto;border-radius:8px;
+  background:rgba(247,251,255,.72);border:1px solid rgba(255,255,255,.52);backdrop-filter:blur(20px);box-shadow:0 28px 90px rgba(53,90,127,.2)
+}
+.modal-head{
+  position:sticky;top:0;z-index:6;padding:16px 18px;border-bottom:1px solid var(--line);
+  display:flex;align-items:center;justify-content:space-between;background:rgba(247,251,255,.84);backdrop-filter:blur(16px)
+}
+.close{width:42px;height:42px;border-radius:4px;border:1px solid var(--line);background:rgba(255,255,255,.8);cursor:pointer}
+.modal-body{padding:18px}
+.step{display:none;animation:fadeUp .35s ease}
+.step.active{display:block}
+.step-head{display:flex;align-items:end;justify-content:space-between;gap:18px;margin-bottom:14px}
+
+.entry-grid{display:grid;grid-template-columns:1.08fr .92fr;gap:14px}
+.scan-grid{display:grid;grid-template-columns:1fr .96fr;gap:14px}
+.tax-grid{display:grid;grid-template-columns:.88fr 1.12fr;gap:14px}
+.repair-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+
+.card,.summary,.receipt,.recovery{
+  position:relative;overflow:hidden;border-radius:6px;padding:18px;
+  background:linear-gradient(180deg, rgba(234,244,253,.95), rgba(220,236,251,.86));
+  border:1px solid rgba(173,212,248,.48);
+  box-shadow:0 18px 48px rgba(129,165,198,.18), inset 0 1px 0 rgba(255,255,255,.58)
+}
+.card:before,.summary:before,.receipt:before,.recovery:before{
+  content:"TRUST TAX";position:absolute;right:18px;top:12px;
+  font-family:"Sora",sans-serif;font-size:11px;letter-spacing:.2em;color:rgba(112,158,202,.18);text-transform:uppercase
+}
+.card:after,.summary:after,.receipt:after,.recovery:after{
+  content:"";position:absolute;left:0;right:0;top:0;height:4px;
+  background:linear-gradient(90deg, transparent, rgba(141,202,255,.55), transparent);
+  animation:progressGlow 3.2s ease-in-out infinite
+}
+.card-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
+.entry-card{min-height:100%}
+.copy-input{
+  width:100%;min-height:148px;resize:vertical;background:rgba(255,255,255,.44);
+  border:1px solid rgba(126,166,214,.34);border-radius:4px;padding:14px 14px;color:#1f3550;outline:none;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.4)
+}
+.copy-input::placeholder{color:#7f97b1}
+.case-mini-list{display:grid;gap:10px}
+.case-mini{
+  padding:12px;background:rgba(255,255,255,.42);border:1px solid rgba(126,166,214,.26);border-radius:4px;
+  display:flex;justify-content:space-between;align-items:center;gap:12px;cursor:pointer;transition:.2s ease
+}
+.case-mini:hover{transform:translateX(3px);background:rgba(255,255,255,.62)}
+.case-mini b{font-family:"Sora",sans-serif;font-size:13px}
+.case-mini span{font-size:12px;color:var(--muted)}
+.post-copy{font-size:19px;line-height:2.0;color:#274462;letter-spacing:.005em}
+.mark{padding:2px 5px;border-radius:4px;transition:.28s ease}
+.mark.active{background:rgba(241,212,154,.84);box-shadow:0 0 0 3px rgba(241,212,154,.2)}
+.scan-divider{
+  height:2px;background:linear-gradient(90deg,transparent,#82abda,transparent);margin:18px 0;animation:scanPulse 1.9s ease-in-out infinite
+}
+.account-top{
+  padding:16px;border-radius:4px;background:linear-gradient(135deg,rgba(29,91,146,.97),rgba(83,133,182,.95));color:#fff;position:relative;overflow:hidden
+}
+.account-top:after{content:"";position:absolute;width:150px;height:150px;border-radius:50%;right:-46px;top:-48px;background:rgba(255,255,255,.11)}
+.live-balance{font-family:"Sora",sans-serif;font-size:72px;line-height:1;font-weight:800;letter-spacing:-.05em;margin-top:8px}
+.live-balance small{font-size:15px;opacity:.82}
+.bar{height:10px;background:rgba(255,255,255,.18);border-radius:999px;overflow:hidden;margin-top:14px}
+.bar i{display:block;height:100%;width:100%;border-radius:999px;background:linear-gradient(90deg,#ffffff,#c9e3ff)}
+.feed{margin-top:12px}
+.feed-row{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:11px 0;border-bottom:1px dashed rgba(160,198,232,.24)}
+.feed-row:last-child{border-bottom:none}
+.feed-row b{display:block;font-size:13px}
+.feed-row small{display:block;margin-top:4px;color:var(--muted);line-height:1.45}
+.minus{color:var(--warn);font-weight:900}
+.summary{padding:22px}
+.tax-big{font-family:"Sora",sans-serif;font-size:76px;line-height:1;font-weight:800;letter-spacing:-.06em;color:var(--navy)}
+.tax-big span{color:var(--warn)}
+.receipt-row{display:flex;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:1px dashed rgba(160,198,232,.26)}
+.receipt-row:last-child{border-bottom:none}
+.diag-row{margin-top:14px;display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.diag{padding:16px;border-radius:4px;background:rgba(230,242,255,.84);border:1px solid rgba(160,198,232,.34)}
+.diag .n{font-family:"Sora",sans-serif;font-size:26px;font-weight:700;margin-top:6px}
+.copy-box{margin-top:12px;font-size:16px;line-height:1.95;color:#21415e;letter-spacing:.004em}
+.copy.good .copy-box{color:#285045}
+.recovery{margin-top:14px}
+.recovery-big{font-family:"Sora",sans-serif;font-size:40px;font-weight:800;color:#2b6d92}
+.typing-caret{display:inline-block;width:1px;height:1.1em;background:#285045;vertical-align:-0.15em;margin-left:3px;animation:blinkCaret .85s steps(1) infinite}
+.spinner{
+  width:16px;height:16px;border-radius:50%;border:2px solid rgba(255,255,255,.36);border-top-color:#ffffff;
+  animation:spinScan 1s linear infinite;display:inline-block;margin-right:8px;vertical-align:-3px
+}
+
+@media(max-width:980px){
+  .hero-grid,.summary-grid,.case-grid,.compare,.scan-grid,.tax-grid,.repair-grid,.micro-grid,.entry-grid,.sample-grid,.logic-flow{grid-template-columns:1fr}
+  .section-head,.step-head{align-items:flex-start;flex-direction:column}
+  .diag-row{grid-template-columns:1fr 1fr}
+  .logic-arrow{display:none}
+}
+@media(max-width:640px){
+  .hero-copy,.hero-screen{padding:22px}
+  h1{font-size:30px}
+  .section-title{font-size:28px}
+  .balance,.live-balance{font-size:56px}
+  .tax-big{font-size:54px}
+  .diag-row{grid-template-columns:1fr}
+  .post-copy{font-size:18px}
+}
+
+@keyframes orbDrift{
+  0%,100%{transform:translate3d(0,0,0) scale(1)}
+  50%{transform:translate3d(18px,-14px,0) scale(1.04)}
+}
+@keyframes caseSheen{
+  0%{transform:translateX(-130%)}
+  100%{transform:translateX(160%)}
+}
+@keyframes ledgerIn{
+  0%{opacity:0;transform:translateX(14px)}
+  100%{opacity:1;transform:translateX(0)}
+}
+@keyframes statementStamp{
+  0%{opacity:0;transform:scale(.72) rotate(-7deg)}
+  65%{opacity:1;transform:scale(1.06) rotate(-2deg)}
+  100%{opacity:1;transform:scale(1) rotate(-3deg)}
+}
+@keyframes flowDash{
+  to{stroke-dashoffset:-34}
+}
+@keyframes stepReveal{
+  0%{opacity:0;transform:translateY(12px);filter:blur(4px)}
+  100%{opacity:1;transform:translateY(0);filter:blur(0)}
+}
+@keyframes scanSweep{
+  0%{transform:translateY(-8px);opacity:0}
+  15%{opacity:1}
+  85%{opacity:1}
+  100%{transform:translateY(150px);opacity:0}
+}
+@keyframes recoveryGlow{
+  0%,100%{box-shadow:0 18px 48px rgba(129,165,198,.18), inset 0 1px 0 rgba(255,255,255,.58)}
+  50%{box-shadow:0 22px 62px rgba(95,155,211,.25), inset 0 1px 0 rgba(255,255,255,.7)}
+}
+
+.hero:after{
+  content:"";
+  position:absolute;
+  width:320px;height:320px;border-radius:50%;
+  right:4vw;top:40px;
+  background:radial-gradient(circle,rgba(132,189,239,.18),rgba(132,189,239,0) 70%);
+  filter:blur(16px);
+  animation:orbDrift 11s ease-in-out infinite;
+  pointer-events:none;
+}
+.hero-screen{
+  transition:transform .35s ease, box-shadow .35s ease;
+  transform-style:preserve-3d;
+}
+.hero-screen:hover{transform:translateY(-3px)}
+.case{position:relative}
+.case:before{
+  content:"";
+  position:absolute;
+  top:0;bottom:0;width:36%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.34),transparent);
+  transform:translateX(-130%);
+  z-index:2;
+  pointer-events:none;
+}
+.case:hover:before{animation:caseSheen .9s ease}
+.feed-row.new{
+  animation:ledgerIn .42s cubic-bezier(.2,.8,.2,1) both;
+}
+.receipt-row.reveal{
+  animation:stepReveal .38s ease both;
+}
+.statement-stamp{
+  position:absolute;
+  right:24px;bottom:22px;
+  padding:8px 12px;
+  border:1px solid rgba(72,136,194,.34);
+  color:#4b80ae;
+  font-family:"Sora",sans-serif;
+  font-size:11px;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+  transform:rotate(-3deg);
+  opacity:0;
+}
+.statement-stamp.show{animation:statementStamp .52s cubic-bezier(.2,.9,.3,1.2) forwards}
+.scan-beam{
+  position:absolute;
+  left:12px;right:12px;height:2px;
+  background:linear-gradient(90deg,transparent,#7db3e3,transparent);
+  filter:drop-shadow(0 0 6px rgba(81,155,222,.45));
+  pointer-events:none;
+  opacity:0;
+}
+.scan-beam.active{animation:scanSweep 2.5s ease-in-out infinite}
+.logic-visual{
+  position:relative;
+  margin-top:14px;
+}
+.logic-svg{
+  position:absolute;
+  left:0;right:0;top:50%;
+  width:100%;height:32px;
+  transform:translateY(-50%);
+  pointer-events:none;
+  z-index:0;
+}
+.logic-svg path{
+  fill:none;
+  stroke:rgba(105,157,205,.55);
+  stroke-width:1.5;
+  stroke-dasharray:7 8;
+  animation:flowDash 2s linear infinite;
+}
+.logic-flow{position:relative;z-index:1}
+.recovery.live{
+  animation:recoveryGlow 2.6s ease-in-out infinite;
+}
+.recovery-meter{
+  margin-top:14px;
+  height:8px;
+  border-radius:999px;
+  overflow:hidden;
+  background:rgba(117,169,222,.12);
+}
+.recovery-meter i{
+  display:block;height:100%;width:0%;
+  background:linear-gradient(90deg,#a8c9eb,#74b2e8,#8bc8bc);
+  border-radius:999px;
+  transition:width 1.2s cubic-bezier(.2,.8,.2,1);
+}
+.copy-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+.tiny-action{
+  border:1px solid rgba(126,163,200,.28);
+  background:rgba(255,255,255,.46);
+  color:#31587d;
+  padding:9px 12px;
+  border-radius:3px;
+  cursor:pointer;
+  font-size:12px;
+}
+.tiny-action:hover{background:rgba(255,255,255,.72)}
+.toast{
+  position:fixed;
+  left:50%;bottom:28px;
+  transform:translateX(-50%) translateY(12px);
+  z-index:120;
+  padding:10px 14px;
+  border-radius:3px;
+  background:rgba(31,65,96,.9);
+  color:white;
+  font-size:12px;
+  opacity:0;
+  pointer-events:none;
+  transition:.25s ease;
+  box-shadow:0 12px 34px rgba(33,63,94,.24);
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+
+.copy.good{
+  position:relative;
+}
+.copy.good:before{
+  content:"REPAIRED";
+  position:absolute;
+  right:16px;
+  bottom:14px;
+  font-family:"Sora",sans-serif;
+  font-size:10px;
+  letter-spacing:.16em;
+  color:rgba(63,130,111,.34);
+}
+
+</style>
+</head>
+<body>
+<div class="nav">
+  <div class="wrap nav-inner">
+    <div class="brand"><div class="logo">₮</div>TRUST TAX</div>
+    <div class="nav-links">
+      <a href="#cases">Cases</a>
+      <a href="#logic">Logic</a>
+      <a href="#why">Thesis</a>
+    </div>
+  </div>
+</div>
+
+<section class="hero">
+  <div class="sky-cloud c1"></div>
+  <div class="sky-cloud c2"></div>
+  <div class="sky-cloud c3"></div>
+  <div class="sky-cloud c4"></div>
+  <div class="wrap hero-grid">
+    <div class="glass panel hero-copy">
+      <div class="eyebrow"><i></i> Trust Banking Interface</div>
+      <h1>把广告感，变成一笔可追踪的信任成本</h1>
+      <div class="hero-en">Track the loss · Diagnose the trigger · Repair the message</div>
+      <div class="lead">逐句扫描内容，记录信任扣减，并生成可修复的表达方案。</div>
+      <div class="actions">
+        <button class="btn primary" onclick="openEntry()">Start Scan →</button>
+        <a class="btn" href="#cases">Explore Cases</a>
+      </div>
+      <div class="micro-grid">
+        <div class="micro"><b>Track</b><span>定位损耗。</span></div>
+        <div class="micro"><b>Diagnose</b><span>识别原因。</span></div>
+        <div class="micro"><b>Repair</b><span>生成修复。</span></div>
+      </div>
+    </div>
+
+    <div class="glass panel hero-screen">
+      <div class="dashboard">
+        <div class="dash-top">
+          <div>
+            <b>Trust Banking Dashboard</b><br>
+            <span class="muted" style="font-size:13px">Content Trust Account</span>
+          </div>
+          <div class="chip"><span class="live-dot"></span>Live</div>
+        </div>
+        <div class="dash-body">
+          <div class="account">
+            <small>available trust balance</small>
+            <div class="balance">68</div>
+            <div class="balance-strip">
+              <div class="badge">Trust Tax · 32</div>
+              <div class="badge">Recovery · +21</div>
+            </div>
+          </div>
+          <div class="summary-grid">
+            <div class="block">
+              <div class="metric-line"><b>Hype</b><span>8.6</span></div>
+              <div class="metric-line"><b>Boundary</b><span>9.1</span></div>
+              <div class="metric-line"><b>Mismatch</b><span>7.4</span></div>
+            </div>
+            <div class="block">
+              <div class="metric-line"><b>“闭眼冲”</b><span style="color:var(--warn)">-16</span></div>
+              <div class="metric-line"><b>“完全没问题”</b><span style="color:var(--warn)">-21</span></div>
+              <div class="metric-line"><b>Repair</b><span style="color:var(--ok)">+14</span></div>
+            </div>
+          </div>
+          <div class="note"><b>Ledger Note</b><br>Less slogan. More evidence. More trust.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="cases">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <div class="tag"><i></i> Explore Cases</div>
+        <h2 class="section-title">三条内容，三种不同的信任损耗路径</h2>
+      </div>
+      <div class="section-copy">主页看案例，Start Scan 进入自定义输入与案例选择。</div>
+    </div>
+
+    <div class="case-grid">
+      <div class="glass case" onclick="openCase('serum')">
+        <div class="scene serum" data-label="Beauty"><div class="scene-decoration"></div><div class="case-icon">🧴</div></div>
+        <div class="case-body">
+          <h3>The Perfect Serum</h3>
+          <p>“被问爆了、闭眼冲、敏感肌完全没问题”。</p>
+          <div class="case-foot"><div class="chip">Beauty</div><div class="chip">High Tax Risk</div></div>
+        </div>
+      </div>
+
+      <div class="glass case" onclick="openCase('brunch')">
+        <div class="scene brunch" data-label="Food"><div class="scene-decoration"></div><div class="case-icon">🥐</div></div>
+        <div class="case-body">
+          <h3>The Best Brunch</h3>
+          <p>“最好吃、没有之一、绝对不踩雷”。</p>
+          <div class="case-foot"><div class="chip">Food</div><div class="chip">Absolutism</div></div>
+        </div>
+      </div>
+
+      <div class="glass case" onclick="openCase('headphones')">
+        <div class="scene headphones" data-label="Tech"><div class="scene-decoration"></div><div class="case-icon">🎧</div></div>
+        <div class="case-body">
+          <h3>The Perfect Review</h3>
+          <p>“重新定义旗舰、没有短板”。</p>
+          <div class="case-foot"><div class="chip">Tech</div><div class="chip">Voice Mismatch</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="logic">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <div class="tag"><i></i> Product Logic</div>
+        <h2 class="section-title">从“广告感分数”转向“信任账单”</h2>
+      </div>
+      <div class="section-copy">通过流程图展示产品逻辑，而不只是文字描述。</div>
+    </div>
+
+    <div class="logic-visual">
+      <svg class="logic-svg" viewBox="0 0 1000 32" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M40 16 H960"/>
+      </svg>
+      <div class="logic-flow">
+      <div class="glass logic-step">
+        <div class="emoji">✍️</div>
+        <b>Input Copy</b>
+        <span>输入文案或选择案例</span>
+        <div class="logic-arrow">→</div>
+      </div>
+      <div class="glass logic-step">
+        <div class="emoji">🔎</div>
+        <b>Scan</b>
+        <span>逐句识别触发词</span>
+        <div class="logic-arrow">→</div>
+      </div>
+      <div class="glass logic-step">
+        <div class="emoji">🧾</div>
+        <b>Statement</b>
+        <span>生成 Trust Ledger</span>
+        <div class="logic-arrow">→</div>
+      </div>
+      <div class="glass logic-step">
+        <div class="emoji">🛠️</div>
+        <b>Repair</b>
+        <span>输出更可信的表达</span>
+      </div>
+    </div>
+    </div>
+
+    <div class="compare">
+      <div class="glass comp">
+        <h4>普通检测</h4>
+        <div class="line bad">营销味较重。</div>
+        <div class="line bad">减少夸张词。</div>
+        <div class="line bad">广告感：82%。</div>
+      </div>
+      <div class="glass comp">
+        <h4>Trust Tax</h4>
+        <div class="line good">逐句扣款。</div>
+        <div class="line good">按问题归因。</div>
+        <div class="line good">生成 Repair Mode。</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="why">
+  <div class="wrap">
+    <div class="glass thesis">
+      <div class="tag"><i></i> Product Thesis</div>
+      <h2 class="section-title" style="font-size:30px">更好的商业表达，不只是被看见，更要被相信。</h2>
+      <div class="section-copy" style="max-width:860px">Trust Tax 把内容的信任损耗显性化，让品牌、创作者和平台能像管理风险一样管理表达质量。</div>
+    </div>
+  </div>
+</section>
+
+<div class="overlay" id="overlay">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="brand"><div class="logo">₮</div><span id="caseLabel">TRUST TAX</span></div>
+      <button class="close" onclick="closeModal()">×</button>
+    </div>
+    <div class="modal-body">
+
+      <div class="step" id="entryStep">
+        <div class="step-head">
+          <div>
+            <div class="tag"><i></i> Start Scan</div>
+            <h2 class="section-title" style="font-size:30px;margin-top:12px">输入文案，或进入完整案例</h2>
+          </div>
+          <div class="section-copy">Write your own copy or open a full case.</div>
+        </div>
+
+        <div class="entry-grid">
+          <div class="card entry-card">
+            <div class="card-head">
+              <div><b>Custom Copy</b><br><span class="muted" style="font-size:13px">paste your content</span></div>
+              <div class="chip">Custom Entry</div>
+            </div>
+            <textarea id="customInput" class="copy-input" placeholder="输入一段商业化文案，例如：这款精华真的被问爆了，姐妹们闭眼冲，敏感肌也完全没问题……"></textarea>
+            <div class="actions" style="margin-top:12px">
+              <button class="btn primary" onclick="analyzeCustom()">Analyze My Copy →</button>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-head">
+              <div><b>Full Cases</b><br><span class="muted" style="font-size:13px">open a complete analysis flow</span></div>
+              <div class="chip">Case Library</div>
+            </div>
+            <div class="case-mini-list">
+              <div class="case-mini" onclick="openCase('serum')">
+                <div style="display:flex;align-items:center;gap:12px">
+                  <div style="font-size:20px">🧴</div>
+                  <div><b>The Perfect Serum</b><br><span>Beauty · Hype / Missing Boundary</span></div>
+                </div>
+                <span>→</span>
+              </div>
+              <div class="case-mini" onclick="openCase('brunch')">
+                <div style="display:flex;align-items:center;gap:12px">
+                  <div style="font-size:20px">🥐</div>
+                  <div><b>The Best Brunch</b><br><span>Food · Absolutism / Consensus</span></div>
+                </div>
+                <span>→</span>
+              </div>
+              <div class="case-mini" onclick="openCase('headphones')">
+                <div style="display:flex;align-items:center;gap:12px">
+                  <div style="font-size:20px">🎧</div>
+                  <div><b>The Perfect Review</b><br><span>Tech · Scripted Language / Voice Mismatch</span></div>
+                </div>
+                <span>→</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step" id="scanStep">
+        <div class="step-head">
+          <div>
+            <div class="tag"><i></i> Live Scan</div>
+            <h2 class="section-title" style="font-size:30px;margin-top:12px">Trust Account Scan</h2>
+          </div>
+          <div class="section-copy">Sentence-level trust analysis</div>
+        </div>
+
+        <div class="scan-grid">
+          <div class="card">
+            <div class="card-head">
+              <div><b>Commercial Copy</b><br><span class="muted" style="font-size:13px">line by line</span></div>
+              <div class="chip" id="scanStatus">Ready</div>
+            </div>
+            <div class="post-copy" id="postText"></div>
+            <div class="scan-beam" id="scanBeam"></div>
+            <div class="scan-divider"></div>
+          </div>
+
+          <div class="card">
+            <div class="account-top">
+              <small style="letter-spacing:.12em;text-transform:uppercase;opacity:.82">available trust balance</small>
+              <div class="live-balance"><span id="liveBalance">100</span> <small>/ 100</small></div>
+              <div class="bar"><i id="liveMeter"></i></div>
+            </div>
+            <div class="feed" id="liveLog">
+              <div class="feed-row"><div><b>System Ready</b><small>Waiting for scan.</small></div><div class="muted">—</div></div>
+            </div>
+            <div class="actions">
+              <button class="btn primary" onclick="runScan()">Start Scan →</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step" id="taxStep">
+        <div class="step-head">
+          <div>
+            <div class="tag"><i></i> Trust Tax Statement</div>
+            <h2 class="section-title" style="font-size:30px;margin-top:12px">Statement</h2>
+          </div>
+          <div class="section-copy">Risk type · wording · trust cost</div>
+        </div>
+
+        <div class="tax-grid">
+          <div class="summary">
+            <div class="tag" style="margin-bottom:16px"><i></i> Summary</div>
+            <div class="tax-big"><span id="taxBig">49</span></div>
+            <div style="font-size:18px;font-weight:800;margin-top:8px">points of Trust Tax</div>
+          </div>
+
+          <div class="receipt">
+            <div class="card-head">
+              <div><b>Trust Ledger Receipt</b><br><span class="muted" style="font-size:13px">transaction record</span></div>
+              <div class="chip">Statement</div>
+            </div>
+            <div id="receipt"></div><div class="statement-stamp" id="statementStamp">ASSESSED</div>
+          </div>
+        </div>
+
+        <div class="diag-row" id="diagGrid"></div>
+
+        <div class="actions" style="margin-top:18px">
+          <button class="btn primary" onclick="showRepair()">Repair Mode →</button>
+        </div>
+      </div>
+
+      <div class="step" id="repairStep">
+        <div class="step-head">
+          <div>
+            <div class="tag"><i></i> Repair Mode</div>
+            <h2 class="section-title" style="font-size:30px;margin-top:12px">Trust Recovery</h2>
+          </div>
+          <div class="section-copy">Before / After</div>
+        </div>
+
+        <div class="repair-grid">
+          <div class="card copy">
+            <div class="card-head"><div><b>Before</b><br><span class="muted" style="font-size:13px">high cost</span></div></div>
+            <div class="copy-box" id="beforeCopy"></div>
+          </div>
+          <div class="card copy good">
+            <div class="card-head"><div><b>After</b><br><span class="muted" style="font-size:13px">repaired copy</span></div></div>
+            <div class="copy-box" id="afterCopy"></div>
+            <div class="copy-actions">
+              <button class="tiny-action" onclick="copyRepaired()">Copy Repaired Copy</button>
+              <button class="tiny-action" onclick="rescanRepaired()">Rescan After</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="recovery">
+          <div class="tag"><i></i> Predicted Recovery</div>
+          <div class="recovery-big" id="recoverText">51 → 82</div>
+          <div id="recoverWhy" class="section-copy" style="margin-top:8px;max-width:none"></div>
+          <div class="recovery-meter"><i id="recoveryBar"></i></div>
+        </div>
+
+        <div class="actions">
+          <button class="btn" onclick="backToEntry()">Back</button>
+          <button class="btn primary" onclick="closeModal()">Done</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+const CASES = {
+  serum:{
+    label:'THE PERFECT SERUM',
+    text:[
+      ['救命！真的被问爆了，',null],
+      ['这瓶精华姐妹们闭眼冲，','闭眼冲'],
+      ['敏感肌也完全没问题，','完全没问题'],
+      ['我用了三天皮肤直接发光！','三天皮肤直接发光']
+    ],
+    deductions:[
+      {label:'“闭眼冲”',points:16,type:'Hype Language', why:'Over-push purchase signal.'},
+      {label:'“完全没问题”',points:21,type:'Missing Boundary', why:'No usage boundary.'},
+      {label:'“三天直接发光”',points:12,type:'Outcome Inflation', why:'Overstated result claim.'}
+    ],
+    diagnosis:[['Hype','8.6/10'],['Boundary','9.1/10'],['Scriptedness','7.4/10']],
+    before:'救命！真的被问爆了，这瓶精华姐妹们闭眼冲，敏感肌也完全没问题，我用了三天皮肤直接发光！',
+    after:'我更喜欢它在妆前用，吸收比较快，也不太容易和底妆打架。我的皮肤偏干，用下来保湿感不错；但如果你本身很容易出油，夏天可能会觉得稍微有一点润。',
+    recover:'51 → 82',
+    why:'具体场景、适用边界和真实限制会显著提升可信度。'
+  },
+  brunch:{
+    label:'THE BEST BRUNCH',
+    text:[
+      ['北京最好吃的 Brunch，没有之一！','最好吃 / 没有之一'],
+      ['每一道都封神，','每一道都封神'],
+      ['随便点都绝对不会踩雷。','绝对不会踩雷']
+    ],
+    deductions:[
+      {label:'“最好吃 / 没有之一”',points:18,type:'Absolutism', why:'Absolute judgment.'},
+      {label:'“每一道都封神”',points:15,type:'Consensus Inflation', why:'Inflated universal praise.'},
+      {label:'“绝对不会踩雷”',points:17,type:'Missing Trade-offs', why:'No preference boundary.'}
+    ],
+    diagnosis:[['Absolutism','9.2/10'],['Consensus','8.7/10'],['Specificity','2.8/10']],
+    before:'北京最好吃的 Brunch，没有之一！每一道都封神，随便点都绝对不会踩雷。',
+    after:'如果第一次来，我更推荐班尼迪克蛋和可颂：前者酱汁比较浓，后者外层很酥。甜口那道对我来说偏腻，两个人点三道比较合适，人均大概 120 左右。',
+    recover:'50 → 84',
+    why:'具体推荐、价格和个人偏好更容易形成信任。'
+  },
+  headphones:{
+    label:'THE PERFECT REVIEW',
+    text:[
+      ['这款耳机真的重新定义旗舰，','重新定义旗舰'],
+      ['音质、降噪、佩戴全部拉满，','全部拉满'],
+      ['基本没有任何短板。','没有任何短板']
+    ],
+    deductions:[
+      {label:'“重新定义旗舰”',points:13,type:'Hype Language', why:'Brand-like slogan tone.'},
+      {label:'“全部拉满”',points:14,type:'Scripted Language', why:'Low personal detail.'},
+      {label:'“没有任何短板”',points:19,type:'Voice Mismatch', why:'Not aligned with creator style.'}
+    ],
+    diagnosis:[['Hype','7.8/10'],['Mismatch','9.0/10'],['Boundary','8.8/10']],
+    before:'这款耳机真的重新定义旗舰，音质、降噪、佩戴全部拉满，基本没有任何短板。',
+    after:'它的优势比较明确：通勤场景下降噪很稳，低频也比上一代更扎实。佩戴对我来说没问题，但耳罩还是偏厚；如果你主要在办公室用，提升可能没有地铁通勤那么明显。',
+    recover:'54 → 81',
+    why:'让表达重新回到创作者原有的理性语气。'
+  }
+};
+
+
+function animateNumber(el, from, to, duration=520){
+  const start = performance.now();
+  function frame(now){
+    const t = Math.min(1,(now-start)/duration);
+    const eased = 1 - Math.pow(1-t,3);
+    el.textContent = Math.round(from + (to-from)*eased);
+    if(t < 1) requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+}
+function showToast(text){
+  const t = document.getElementById('toast');
+  t.textContent = text;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 1400);
+}
+function copyRepaired(){
+  const text = document.getElementById('afterCopy').textContent;
+  if(navigator.clipboard && text){
+    navigator.clipboard.writeText(text).then(()=>showToast('Repaired copy copied'));
+  }else{
+    showToast('Copy ready');
+  }
+}
+function rescanRepaired(){
+  const c = CASES[active];
+  if(!c || !c.after) return;
+  CASES.custom = buildCustomCase(c.after);
+  active = 'custom';
+  renderScan();
+  show('scan');
+  setTimeout(runScan, 260);
+}
+
+function typeText(el, text, speed=24){
+  el.innerHTML = '';
+  let i = 0;
+  const caret = '<span class="typing-caret"></span>';
+  function tick(){
+    if(i <= text.length){
+      el.innerHTML = text.slice(0,i).replace(/\n/g,'<br>') + (i < text.length ? caret : '');
+      i++;
+      setTimeout(tick, speed);
+    }
+  }
+  tick();
+}
+function splitSentences(text){
+  return text
+    .replace(/\s+/g,' ')
+    .split(/(?<=[。！？!?])/)
+    .map(s=>s.trim())
+    .filter(Boolean);
+}
+
+const RISK_PATTERNS = [
+  {
+    type:"Hype Language",
+    points:16,
+    why:"Strong push language.",
+    regex:/(闭眼冲|闭眼入|被问爆了|绝绝子|天花板|神仙|必买|冲就完了)/g
+  },
+  {
+    type:"Missing Boundary",
+    points:18,
+    why:"Missing usage boundary.",
+    regex:/(完全没问题|没有任何短板|没有短板|适合所有|绝对不会|百分百|100%适合|人人都适合)/g
+  },
+  {
+    type:"Outcome Inflation",
+    points:12,
+    why:"Overstated speed or result.",
+    regex:/(三天|立马|瞬间|马上|立刻|直接起飞|直接发光|立竿见影)/g
+  },
+  {
+    type:"Consensus Inflation",
+    points:15,
+    why:"Inflated consensus.",
+    regex:/(全网都在|人手一|没有之一|每一道都|所有人都|大家都|公认)/g
+  },
+  {
+    type:"Scripted Language",
+    points:13,
+    why:"Brand-like scripted tone.",
+    regex:/(重新定义|全部拉满|全方位拉满|王炸|封神|顶配|旗舰天花板)/g
+  }
+];
+
+function detectTrustSignals(text){
+  const sentences = splitSentences(text);
+  const resultText = sentences.length ? sentences : [text];
+  const deductions = [];
+
+  const marked = resultText.map(sentence=>{
+    let hitData = null;
+
+    for(const def of RISK_PATTERNS){
+      const match = sentence.match(def.regex);
+      if(match && match.length){
+        const hit = match[0];
+        hitData = {
+          label:`“${hit}”`,
+          type:def.type,
+          points:def.points,
+          why:def.why
+        };
+        deductions.push(hitData);
+        break;
+      }
+    }
+
+    return [sentence, hitData ? hitData.label.replace(/“|”/g,'') : null];
+  });
+
+  return {marked, deductions};
+}
+
+function normalizePunctuation(s){
+  return s
+    .replace(/\s+/g,' ')
+    .replace(/，，+/g,'，')
+    .replace(/。。+/g,'。')
+    .replace(/，。/g,'。')
+    .trim();
+}
+
+function repairSentence(sentence){
+  let s = sentence.trim();
+  if(!s) return '';
+
+  // 1) Strong buying pressure -> neutral recommendation framing.
+  s = s
+    .replace(/真的?被问爆了/g,'最近有人问到')
+    .replace(/姐妹们?闭眼冲/g,'如果你正好在意这个点，可以重点看看')
+    .replace(/闭眼冲|闭眼入/g,'可以重点关注');
+
+  // 2) Preserve concrete dimensions while softening "everything is maxed out".
+  s = s.replace(/([^。！？!?，]{1,40}(?:、[^。！？!?，]{1,20}){1,5})全部拉满/g,
+    (m, list)=>`我比较明显感受到的是${list}几个维度的提升`);
+  s = s.replace(/全部拉满|全方位拉满/g,'几个核心维度都有比较明显的提升');
+
+  // 3) "redefine / ceiling / flagship" -> evidence-oriented framing.
+  s = s
+    .replace(/真的?重新定义旗舰/g,'这次升级更明显的是几个核心体验点')
+    .replace(/重新定义([^，。！？!?]*)/g,(m,rest)=>{
+      const object = (rest || '').trim();
+      return object ? `在${object}上带来比较明显的变化` : '带来比较明显的体验变化';
+    })
+    .replace(/旗舰天花板|天花板/g,'高水准表现')
+    .replace(/王炸/g,'表现比较突出')
+    .replace(/封神/g,'表现很亮眼');
+
+  // 4) Absolute / no downside -> calibrated boundary.
+  s = s
+    .replace(/基本没有任何短板|没有任何短板|没有短板/g,
+      '整体表现比较均衡，不过具体体验还是会因使用场景和个人需求不同而有取舍')
+    .replace(/绝对不会踩雷/g,'整体接受度比较高，但口味和偏好仍会因人而异')
+    .replace(/绝对不会/g,'大多数情况下表现比较稳定，但仍要结合具体场景判断')
+    .replace(/完全没问题/g,'对我来说整体比较友好，但实际感受仍会因人而异')
+    .replace(/适合所有人|人人都适合|适合所有/g,'适合的人群比较广，但并不是所有人都会有同样感受')
+    .replace(/百分百|100%/g,'在我的体验里');
+
+  // 5) Consensus inflation -> personal / observed experience.
+  s = s
+    .replace(/北京最好吃的\s*Brunch，没有之一/g,'这是我最近比较喜欢的一家 Brunch')
+    .replace(/最好吃的/g,'我个人比较喜欢的')
+    .replace(/最好吃/g,'我个人比较喜欢')
+    .replace(/没有之一/g,'之一')
+    .replace(/每一道都封神/g,'有几道菜的表现尤其突出')
+    .replace(/全网都在/g,'最近不少人提到')
+    .replace(/所有人都|大家都/g,'不少人')
+    .replace(/人手一/g,'不少人在用')
+    .replace(/公认/g,'不少人会提到');
+
+  // 6) Outcome speed -> evidence without impossible certainty.
+  s = s
+    .replace(/三天皮肤直接发光/g,'连续使用一段时间后，我能感受到肤感和光泽度有一定改善')
+    .replace(/三天/g,'连续使用一段时间')
+    .replace(/立马|瞬间|马上|立刻/g,'比较快地')
+    .replace(/直接发光/g,'光泽感会更明显')
+    .replace(/立竿见影/g,'变化比较容易被感知');
+
+  // 7) Generic intensifier cleanup.
+  s = s
+    .replace(/真的真的/g,'确实')
+    .replace(/超级超级/g,'比较')
+    .replace(/巨好用/g,'使用体验不错')
+    .replace(/巨好吃/g,'我个人很喜欢')
+    .replace(/绝绝子/g,'表现不错');
+
+  return normalizePunctuation(s);
+}
+
+function repairCopy(text){
+  const normalized = text.trim();
+
+  // Sentence-level repair keeps the user's nouns, product attributes and structure,
+  // while changing the risky rhetorical framing.
+  const sentences = splitSentences(normalized);
+  let repaired = sentences.map(repairSentence).filter(Boolean).join('');
+
+  // If the rules removed all punctuation separation, keep readability.
+  repaired = normalizePunctuation(repaired);
+
+  // If nothing changed, add a calibrated evidence/boundary sentence rather than
+  // pretending the rewrite improved the text.
+  if(repaired === normalized){
+    const suffix = /[。！？!?]$/.test(normalized) ? '' : '。';
+    repaired = normalized + suffix +
+      '我更建议结合具体使用场景和个人需求判断，这样会比单纯下结论更接近真实体验。';
+  }
+
+  return repaired;
+}
+
+function scoreText(text){
+  const detected = detectTrustSignals(text);
+  return Math.min(100, detected.deductions.reduce((sum,d)=>sum+d.points,0));
+}
+
+function buildCustomCase(raw){
+  const text = raw.trim();
+  const detected = detectTrustSignals(text);
+  const deductions = detected.deductions.slice();
+
+  if(!deductions.length && text.length > 0){
+    deductions.push({
+      label:'“General Promotion Tone”',
+      type:'Commercial Tone',
+      points:8,
+      why:'Mild promotional signal.'
+    });
+    if(detected.marked[0]) detected.marked[0][1] = 'General Promotion Tone';
+  }
+
+  const beforeTax = Math.min(100, deductions.reduce((a,b)=>a+b.points,0));
+  const beforeBalance = Math.max(100-beforeTax,0);
+
+  const repaired = repairCopy(text);
+  const afterTax = scoreText(repaired);
+  const afterBalance = Math.max(100-afterTax,0);
+  const recoveryEnd = Math.max(beforeBalance, afterBalance);
+
+  const diagnosis = [
+    ['Hype', `${Math.min(9.5, (beforeTax/8)+5).toFixed(1)}/10`],
+    ['Boundary', `${(deductions.some(d=>d.type==="Missing Boundary") ? 8.8 : 6.4).toFixed(1)}/10`],
+    ['Clarity', `${(beforeBalance>75 ? 7.8 : beforeBalance>55 ? 6.9 : 5.8).toFixed(1)}/10`]
+  ];
+
+  return {
+    label:'CUSTOM COPY',
+    text:detected.marked,
+    deductions,
+    diagnosis,
+    before:text,
+    after:repaired,
+    recover:`${beforeBalance} → ${recoveryEnd}`,
+    why: recoveryEnd > beforeBalance
+      ? '修复后减少了强推、绝对化或缺少边界的表达，保留原本信息的同时让语气更可信。'
+      : '当前文案的主要风险更偏语义和表达结构，建议继续补充具体场景、证据和使用边界。'
+  };
+}
+
+let active = 'serum';
+const overlay = document.getElementById('overlay');
+const steps = {
+  entry: document.getElementById('entryStep'),
+  scan: document.getElementById('scanStep'),
+  tax: document.getElementById('taxStep'),
+  repair: document.getElementById('repairStep')
+};
+
+function show(name){
+  Object.values(steps).forEach(x=>x.classList.remove('active'));
+  steps[name].classList.add('active');
+}
+function openEntry(){
+  overlay.classList.add('show');
+  document.body.style.overflow='hidden';
+  document.getElementById('caseLabel').textContent='TRUST TAX';
+  show('entry');
+}
+function openCase(key){
+  active = key;
+  overlay.classList.add('show');
+  document.body.style.overflow='hidden';
+  renderScan();
+  show('scan');
+}
+function closeModal(){
+  overlay.classList.remove('show');
+  document.body.style.overflow='';
+}
+function backToEntry(){
+  show('entry');
+}
+function analyzeCustom(){
+  const box = document.getElementById('customInput');
+  const value = box ? box.value.trim() : '';
+  if(!value){
+    alert('请先输入一段文案，或直接选择右侧完整案例。');
+    return;
+  }
+  CASES.custom = buildCustomCase(value);
+  active = 'custom';
+  renderScan();
+  show('scan');
+}
+function renderScan(){
+  const c = CASES[active];
+  document.getElementById('caseLabel').textContent = c.label;
+  document.getElementById('liveBalance').textContent = '100';
+  document.getElementById('liveMeter').style.width = '100%';
+  document.getElementById('liveLog').innerHTML = `<div class="feed-row"><div><b>System Ready</b><small>Waiting for scan.</small></div><div class="muted">—</div></div>`;
+  document.getElementById('scanStatus').innerHTML = 'Ready';
+  const beam = document.getElementById('scanBeam'); if(beam) beam.classList.remove('active');
+  document.getElementById('postText').innerHTML = c.text.map((x,i)=>`<span class="mark" data-i="${i}">${x[0]}</span>`).join('');
+}
+function runScan(){
+  const c = CASES[active];
+  const marks = [...document.querySelectorAll('.mark')];
+  const log = document.getElementById('liveLog');
+  log.innerHTML = '';
+  let balance = 100;
+  let idx = 0;
+  document.getElementById('scanStatus').innerHTML = '<span class="spinner"></span>Scanning';
+  document.getElementById('scanBeam').classList.add('active');
+
+  function next(){
+    marks.forEach(m=>m.classList.remove('active'));
+    if(idx < c.text.length){
+      const mark = marks[idx];
+      mark.classList.add('active');
+      const trigger = c.text[idx][1];
+      if(trigger){
+        const deduction = c.deductions.find(x => x.label.includes(trigger.split(' / ')[0])) || c.deductions.find(x => x.label.includes(trigger));
+        if(deduction){
+          const previousBalance = balance;
+          balance -= deduction.points;
+          animateNumber(document.getElementById('liveBalance'), previousBalance, balance, 520);
+          document.getElementById('liveMeter').style.width = balance + '%';
+          log.insertAdjacentHTML('beforeend', `
+            <div class="feed-row new">
+              <div>
+                <b>${deduction.type}</b>
+                <small>${deduction.label} · ${deduction.why}</small>
+              </div>
+              <div class="minus">- ${deduction.points}</div>
+            </div>`);
+        }
+      }
+      idx++;
+      setTimeout(next, 1700);
+    } else {
+      marks.forEach(m=>m.classList.remove('active'));
+      document.getElementById('scanStatus').innerHTML = 'Complete';
+      document.getElementById('scanBeam').classList.remove('active');
+      setTimeout(renderTax, 900);
+    }
+  }
+  next();
+}
+function renderTax(){
+  const c = CASES[active];
+  const total = c.deductions.reduce((s,x)=>s+x.points,0);
+  document.getElementById('taxBig').textContent = '0';
+  document.getElementById('receipt').innerHTML =
+    c.deductions.map((x,i) => `
+      <div class="receipt-row reveal" style="animation-delay:${i*90}ms">
+        <div>
+          <b>${x.type}</b><br>
+          <span class="muted" style="font-size:13px">${x.label}</span>
+        </div>
+        <b style="color:var(--warn)">- ${x.points}</b>
+      </div>`).join('') +
+    `<div class="receipt-row reveal" style="animation-delay:${c.deductions.length*90}ms">
+      <div><b>Available Trust Balance</b></div>
+      <b>${100-total} / 100</b>
+    </div>`;
+  document.getElementById('diagGrid').innerHTML =
+    c.diagnosis.map((x,i) => `
+      <div class="diag" style="animation:stepReveal .38s ease ${120+i*80}ms both">
+        <div class="muted" style="font-size:12px;text-transform:uppercase;letter-spacing:.12em">${x[0]}</div>
+        <div class="n">${x[1]}</div>
+      </div>`).join('');
+  show('tax');
+  animateNumber(document.getElementById('taxBig'),0,total,680);
+  const stamp = document.getElementById('statementStamp');
+  stamp.classList.remove('show');
+  setTimeout(()=>stamp.classList.add('show'),520);
+}
+function showRepair(){
+  const c = CASES[active];
+  document.getElementById('beforeCopy').textContent = c.before;
+  document.getElementById('afterCopy').innerHTML = '';
+  document.getElementById('recoverText').textContent = c.recover;
+  document.getElementById('recoverWhy').textContent = c.why;
+  show('repair');
+  const rec = document.querySelector('.recovery');
+  rec.classList.add('live');
+  const bar = document.getElementById('recoveryBar');
+  bar.style.width='0%';
+  const target = parseInt((c.recover.split('→')[1]||'82').trim(),10);
+  setTimeout(()=>{bar.style.width = Math.min(target,100) + '%';},180);
+  setTimeout(()=>typeText(document.getElementById('afterCopy'), c.after, 24), 220);
+}
+</script>
+<div class="toast" id="toast">Copied</div>
+</body>
+</html>
